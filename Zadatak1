@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define Max_Bodovi 9
+#define Max_Size 1024
 
 
 struct Student;
@@ -11,23 +12,23 @@ struct Student{
 	char prezime[64];
 	int bodovi;
 };
-
 int main()
 {	
 	char ch;
-	int br_std=0; 
+	int br_std=0;
+	char buffer[Max_Size] = {0};
 	FILE* fp = fopen("popis.txt", "r");
 	if (fp == NULL) {
 		printf("Datoteka se nije otvorila!\n");
 		return -1;
 	}
-  
 	//Brojac studenata (mora biti stisnut Enter na kraju tekstualne datoteke nakon broja bodova zadnjeg studenta)
-	while (!feof(fp)) {
-		ch = fgetc(fp);
-		if (ch == '\n')
-			br_std++;
+
+	while (fgets(buffer, Max_Size, fp) != NULL) {
+		br_std++;
 	}
+
+	//BITNO!	
 	rewind(fp);
 
 	std* niz = (std*)malloc(sizeof(std) * br_std);
@@ -35,7 +36,6 @@ int main()
 		printf("Memorija nije alocirana!\n");
 		return -2;
 	}
-  
 	int i = 0;
 	//Redak mora izgledat ovako: Ime Prezime BrBodova
 	while (!feof(fp)) {
