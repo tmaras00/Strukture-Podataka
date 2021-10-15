@@ -14,7 +14,6 @@ struct Student{
 };
 int main()
 {	
-	char ch;
 	int br_std=0;
 	char buffer[Max_Size] = {0};
 	FILE* fp = fopen("popis.txt", "r");
