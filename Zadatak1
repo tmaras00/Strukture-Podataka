@@ -21,8 +21,7 @@ int main()
 		printf("Datoteka se nije otvorila!\n");
 		return -1;
 	}
-	//Brojac studenata (mora biti stisnut Enter na kraju tekstualne datoteke nakon broja bodova zadnjeg studenta)
-
+	//Brojac studenata
 	while (fgets(buffer, Max_Size, fp) != NULL) {
 		br_std++;
 	}
