@@ -1,0 +1,83 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Student;
+typedef struct Student student;
+typedef struct Student* Position;
+
+struct Student {
+	char ime[32];
+	char prezime[64];
+	int god;
+	Position next;
+};
+
+int dodajPocetak(Position head, char* ime, char* prezime, int god) {
+	Position newStudent = NULL;
+	newStudent = (Position)malloc(sizeof(student));
+
+	if (newStudent == NULL) {
+		perror("Greska! Memorija nije alocirana\n"); //puts ili perror ili printf
+		return -1;
+	}
+
+	strcpy(newStudent->ime, ime);
+	strcpy(newStudent->prezime, prezime);
+	newStudent->god = god;
+	newStudent->next = NULL;
+
+	newStudent->next = head->next;
+	head->next = newStudent;
+}
+int ispisListe(Position first) {
+	
+	Position temp = first;
+
+	//for(Position temp=first; temp!=NULL; temp=temp->next){}
+	while (temp) {
+		printf("Name: %s, Surname: %s, DoB: %d\n", temp->ime, temp->prezime, temp->god);
+		temp = temp->next;
+	}
+
+	return EXIT_SUCCESS;
+}
+int dodajKraj() {}
+Position createStudent(char* ime, char* prezime, int god) {
+	
+}
+int unesiNakon(Position position, Position newStudent) {
+	newStudent->next = position->next;
+
+}
+Position findLast(Position head) {
+	Position temp = head;
+	
+	while (temp->next) {
+		temp = temp->next;
+	}
+
+	return temp;
+}
+
+Position findPerson(Position first, char* surname) {
+	
+	Position temp = first;
+	while (temp) {
+		if (strcmp(temp->prezime, surname)== 0) {
+			return temp;
+		}
+	}
+
+	return temp;
+}
+
+int main(int argc, char** argv) {
+	student head = { .next = NULL, .ime = {0}, .prezime = {0}, .god = 0 };
+
+	Position p = &head;
+
+	return EXIT_SUCCESS;
+
+}
