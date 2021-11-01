@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <ctype.h>
+
 
 struct Student;
 typedef struct Student student;
@@ -109,7 +109,7 @@ int delete(Position head) {
 	printf("Upisite prezime koje zelite izbrisati:");
 	scanf("%s", prezime);
 
-	while (head->next != NULL && strcmp(prezime, haed->prezime) != 0)
+	while (head->next != NULL && strcmp(prezime, head->prezime) != 0)
 	{
 		temp = head;
 		head = head->next;
@@ -120,7 +120,7 @@ int delete(Position head) {
 		free(head);
 	}
 
-	else if (strcmp(prezime, p->prezime) != 0)
+	else if (strcmp(prezime, head->prezime) != 0)
 		printf("Trazeno prezime ne postoji u listi");
 
 	return 0;
