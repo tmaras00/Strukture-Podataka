@@ -1,0 +1,66 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+struct Polinom;
+typedef struct Polinom polinom;
+typedef struct Polinom* ppol;
+
+struct Polinom {
+	int koef;
+	int eksp;
+	ppol next;
+};
+
+
+int unosFILE(ppol prvi, ppol drugi) {
+	
+	FILE* fp;
+	char datoteka[64];
+
+	ppol temp;
+	char poli1[128];
+	char poli2[128];
+	int check;
+
+	printf("Unesite naziv datoteke odakle zelite uniti polinome (ime_datoteke.txt) : \n");
+	scanf("%s", datoteka);
+
+	fp = fopen(datoteka, "r");
+	if (fp == NULL) {
+		perror("Datoteka se nije otvorila!\n");
+		return -1;
+	}
+
+	rewind(fp);
+	fgets(poli1, 128, fp);
+	fgets(poli2, 128, fp);
+
+	printf("size of poli1 is %d", strlen(poli1));
+	
+	while (strlen(poli1) > 0) {
+		tu sam sta!
+		sscanf(poli1, "%d %d %n", )
+	}
+	
+
+}
+
+int main() {
+
+	polinom prvipolinom, drugipolinom, suma, produkt;
+	prvipolinom.next = NULL;
+	drugipolinom.next = NULL;
+	suma.next = NULL;
+	produkt.next = NULL;
+
+	unosFILE(&prvipolinom, &drugipolinom);
+
+
+
+
+
+	return EXIT_SUCCESS;
+}
