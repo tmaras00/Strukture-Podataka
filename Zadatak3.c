@@ -15,6 +15,76 @@ struct Student {
 	Position next;
 };
 
+int dodajPocetak(Position);
+int ispisListe(Position);
+int dodajKraj(Position);
+int findPerson(Position);
+int delete(Position);
+int dodajNakon(Position, Position);
+Position justfind(Position, char*);
+Position findbefore(Position, Position);
+int dodajPrije(Position, Position);
+int Sort(Position);
+int uDatoteku(Position);
+int izDatoteke(Position);
+
+int main(int argc, char** argv) {
+	student head = { .next = NULL, .ime = {0}, .prezime = {0}, .god = 0 };
+
+	Position p = &head;
+
+	char izbor;
+
+	Position studentNakon = NULL;
+	studentNakon = (Position)malloc(sizeof(student));
+	char temp_nakon[64];
+
+	Position studentPrije = NULL;
+	studentPrije = (Position)malloc(sizeof(student));
+	char temp_prije[64];
+
+	student ucitano = { .next = NULL, .ime = {0}, .prezime = {0}, .god = 0 };
+
+	//Kopiran izbornik :D
+	while (1) {
+		printf("\nIZBORNIK:\n");
+		printf("P - unos na pocetak liste\nK - unos na kraj liste\nT - trazi po prezimenu\nD - ukloni po prezimenu\nI - ispis liste\nL - izlaz iz programa\nA - unos nakon odredenog prezimena\nB - unos prije odredenog prezimena\n E - unos u datoteku\n H - ispis iz datoteke\n");
+		printf("Unesite naredbu:");
+		scanf(" %c", &izbor);
+
+		switch (toupper(izbor)) {
+		case 'P': dodajPocetak(&head); break;
+		case 'K': dodajKraj(&head); break;
+		case 'T': findPerson(head.next); break;
+		case 'D': delete(&head); break;
+		case 'I': ispisListe(head.next); break;
+		case 'L': return 1; break;
+		case 'A': printf("Nakon kojeg prezimena zelite dodati novog studenta?\n");
+			scanf("%s", temp_nakon);
+			studentNakon = justfind(head.next, temp_nakon);
+			dodajNakon(&head, studentNakon);
+			break;
+
+		case 'B': printf("Prije kojeg prezimena zelite dodati novog studenta?\n");
+			scanf("%s", temp_prije);
+			studentPrije = justfind(head.next, temp_prije);
+			dodajPrije(&head, studentPrije);
+			break;
+
+		case 'S': Sort(&head); break;
+		case 'E': uDatoteku(head.next); break;
+		case 'H': izDatoteke(&ucitano); break;
+
+		default: printf("Wrong command!\n"); break;
+
+		}
+
+	}
+
+	return EXIT_SUCCESS;
+
+}
+
 int dodajPocetak(Position head) {
 	Position newStudent = NULL;
 	newStudent = (Position)malloc(sizeof(student));
@@ -71,7 +141,7 @@ int dodajKraj(Position head) {
 
 	newStudent->next = head->next;
 	head->next = newStudent;
-	
+
 	return 0;
 
 }
@@ -126,48 +196,45 @@ int delete(Position head) {
 		printf("Trazeno prezime ne postoji u listi");
 
 	return 0;
-	
-}
 
- int dodajNakon(Position head, Position nakon){
-     
-    if(nakon==NULL){
-        return -1;
-    }
-    
-    Position newStudent=(Position)malloc(sizeof(student));
-     
-    printf("Unesite ime studenta: ");
+}
+int dodajNakon(Position head, Position nakon) {
+
+	if (nakon == NULL) {
+		return -1;
+	}
+
+	Position newStudent = (Position)malloc(sizeof(student));
+
+	printf("Unesite ime studenta: ");
 	scanf("%s", newStudent->ime);
 	printf("Unesite prezime studenta: ");
 	scanf("%s", newStudent->prezime);
 	printf("Unesite godinu rodenja studenta: ");
 	scanf("%d", &newStudent->god);
-	
-	newStudent->next=nakon->next;
-	nakon->next=newStudent;
-	
+
+	newStudent->next = nakon->next;
+	nakon->next = newStudent;
+
 	return 0;
- }
- 
- Position justfind(Position head, char* prezime){
-     
-     Position temp=head->next;
-     
-     while (temp != NULL && strcmp(temp->prezime, prezime))
+}
+Position justfind(Position head, char* prezime) {
+
+	Position temp = head->next;
+
+	while (temp != NULL && strcmp(temp->prezime, prezime))
 		temp = temp->next;
-    
-    if(temp==NULL){
-        printf("Prezime not found!");
-        return NULL;
-        
-    }
-    
+
+	if (temp == NULL) {
+		printf("Prezime not found!");
+		return NULL;
+
+	}
+
 	return temp;
-     
- }
- 
- Position findbefore(Position head, Position before)
+
+}
+Position findbefore(Position head, Position before)
 {
 	Position temp;
 	temp = head;
@@ -177,33 +244,30 @@ int delete(Position head) {
 
 	return temp;
 }
+int dodajPrije(Position head, Position prije) {
 
- 
- int dodajPrije(Position head, Position prije){
-    
-    if(prije==NULL){
-        return -1;
-    } 
-    
-    Position newStudent=(Position)malloc(sizeof(student));
-    Position prethodni=(Position)malloc(sizeof(student));
-    
-    prethodni=findbefore(head,prije);
-    
-    prethodni->next=newStudent;
-    newStudent->next=prije;
-    
-    printf("Unesite ime studenta: ");
-    scanf("%s", newStudent->ime);
+	if (prije == NULL) {
+		return -1;
+	}
+
+	Position newStudent = (Position)malloc(sizeof(student));
+	Position prethodni = (Position)malloc(sizeof(student));
+
+	prethodni = findbefore(head, prije);
+
+	prethodni->next = newStudent;
+	newStudent->next = prije;
+
+	printf("Unesite ime studenta: ");
+	scanf("%s", newStudent->ime);
 	printf("Unesite prezime studenta: ");
 	scanf("%s", newStudent->prezime);
 	printf("Unesite godinu rodenja studenta: ");
 	scanf("%d", &newStudent->god);
-	
-    return 0;
- }
- 
- int Sort(Position head)
+
+	return 0;
+}
+int Sort(Position head)
 {
 	Position p = head;
 	Position q = NULL;
@@ -232,7 +296,6 @@ int delete(Position head) {
 
 	return 0;
 }
-
 int uDatoteku(Position p)
 {
 	FILE* fp = NULL;
@@ -258,7 +321,6 @@ int uDatoteku(Position p)
 	fclose(fp);
 	return 0;
 }
-
 int izDatoteke(Position p)
 {
 	Position novi, temp;
@@ -272,12 +334,16 @@ int izDatoteke(Position p)
 	}
 
 	temp = p;
-	temp->next = p->next;
 
 	while (!feof(fp)) {
 
 		novi = (Position)malloc(sizeof(student));
-		fscanf(fp, "%s%s%d", novi->ime, novi->prezime, &novi->god);
+		if (novi == NULL) {
+			perror("Memorija nije alocirana!!");
+			return -1;
+		}
+
+		fscanf(fp, "%s %s %d", novi->ime, novi->prezime, &novi->god);
 
 		novi->next = temp->next;    //unos na kraj liste
 		temp->next = novi;
@@ -289,59 +355,4 @@ int izDatoteke(Position p)
 	return 0;
 }
 
-int main(int argc, char** argv) {
-	student head = { .next = NULL, .ime = {0}, .prezime = {0}, .god = 0 };
-	
-	Position p = &head;
 
-	char izbor;
-	
-	Position studentNakon=NULL;
-	studentNakon=(Position)malloc(sizeof(student));
-	char temp_nakon[64];
-	
-	Position studentPrije=NULL;
-	studentPrije=(Position)malloc(sizeof(student));
-	char temp_prije[64];
-	
-	student ucitano = { .next = NULL, .ime = {0}, .prezime = {0}, .god = 0 };
-
-	//Kopiran izbornik :D
-	while (1) {
-		printf("\nIZBORNIK:\n");
-		printf("P - unos na pocetak liste\nK - unos na kraj liste\nT - trazi po prezimenu\nD - ukloni po prezimenu\nI - ispis liste\nL - izlaz iz programa\nA - unos nakon odredenog prezimena\nB - unos prije odredenog prezimena\n E - unos u datoteku\n H - ispis iz datoteke\n");
-		printf("Unesite naredbu:");
-		scanf(" %c", &izbor);
-
-		switch (toupper(izbor)) {
-		case 'P': dodajPocetak(&head); break;
-		case 'K': dodajKraj(&head); break;
-		case 'T': findPerson(head.next); break;
-		case 'D': delete(&head); break;
-		case 'I': ispisListe(head.next); break;
-		case 'L': return 1; break;
-		case 'A': printf("Nakon kojeg prezimena zelite dodati novog studenta?\n");
-		          scanf("%s",temp_nakon);
-		          studentNakon=justfind(head.next,temp_nakon);
-		          dodajNakon(&head, studentNakon);
-		          break;
-		          
-        case 'B': printf("Prije kojeg prezimena zelite dodati novog studenta?\n");
-		          scanf("%s",temp_prije);
-		          studentPrije=justfind(head.next,temp_prije);
-		          dodajPrije(&head, studentPrije);
-		          break;
-		          
-		case 'S': Sort(&head); break;
-		case 'E': uDatoteku(head.next); break;
-		case 'H': izDatoteke(&ucitano); break;
-		          
-		default: printf("Wrong command!\n"); break;
-
-		}
-
-	}
-
-	return EXIT_SUCCESS;
-
-}
