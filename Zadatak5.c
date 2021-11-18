@@ -19,9 +19,20 @@ int performOperation(Position head, char operation);
 int calculatePostfixFromFile(double* destinationOfResult, char* fileName);
 int deleteAll(Position head);
 
-int main() {}
+int main() {
 
-//Dovrsi, mozda je dovresno?
+	char fileName[64] = { 0 };
+	double result = 0;
+	printf("Unesite naziv datoteke gdje se nalazi postfix: ");
+	scanf("%s", fileName);
+
+	calculatePostfixFromFile(&result, fileName);
+	printf("Rezultat je %lf", result);
+	
+
+	return EXIT_SUCCESS;
+}
+
 Position CreateElement(double number) {
 
 	Position newElement = NULL;
@@ -32,16 +43,31 @@ Position CreateElement(double number) {
 	}
 
 	newElement->number = number;
+	newElement->next = NULL;
 
 	return newElement;
 }
-//Dovrsi
 int InsertAfter(Position position, Position newelement) {
 
 	newelement->next = position->next;
+	position->next = newelement;
 
+	return EXIT_SUCCESS;
 
+}
+int push(Position head, double number)
+{
+	Position newElement = NULL;
 
+	newElement = CreateElement(number);
+	if (!newElement)
+	{
+		return -1;
+	}
+
+	InsertAfter(head, newElement);
+
+	return EXIT_SUCCESS;
 }
 int deleteAfter(Position position) {
 
@@ -56,7 +82,7 @@ int deleteAfter(Position position) {
 
 }
 int pop(double* destinationOfResult, Position head) {
-	
+
 	Position first = head->next;
 	if (!first) {
 		perror("Postfix not valid! Please check your file!\n");
@@ -87,26 +113,25 @@ int performOperation(Position head, char operation) {
 	}
 
 	switch (operation) {
-	
-	case '+': 
+
+	case '+':
 		result = operand1 + operand2; break;
-	case '-': 
+	case '-':
 		result = operand1 - operand2; break;
-	case '*': 
+	case '*':
 		result = operand1 * operand2; break;
-	case '/': 
+	case '/':
 		if (operand2 == 0) {
 			printf("Cannot divide with 0! Check your postfix!\n");
 			return -1;
 		}
 		result = operand1 / operand2; break;
-	default: printf("Operation not supported!\n"); break;
-	
+	default: printf("Operation not supported!\n"); return -1;
+
 	}
 
-	return EXIT_SUCCESS;
+	return push(head,result);
 }
-//Dovrsi
 int calculatePostfixFromFile(double* destinationOfResult, char* fileName) {
 
 	FILE* file = NULL;
@@ -123,7 +148,7 @@ int calculatePostfixFromFile(double* destinationOfResult, char* fileName) {
 	double number = 0;
 	int numBytes = 0;
 	int status = 0;
-	Position head=NULL;
+	Stack head = { .next = NULL,.number = 0 };
 
 	fseek(file, 0, SEEK_END);
 	fileLenght = ftell(file);
@@ -131,37 +156,59 @@ int calculatePostfixFromFile(double* destinationOfResult, char* fileName) {
 	buffer = (char*)calloc(fileLenght + 1, sizeof(char)); //+1 jer zavrsava sa null terminating character
 	if (!buffer) {
 		perror("Memory not allocated!\n");
-			return -1;
+		return -1;
 	}
 
 	rewind(file);
 	fread(buffer, sizeof(char), fileLenght, file);
-	printf("|%s|\n",buffer);
+	printf("|%s|\n", buffer);
 	fclose(file);
 
-	while (srtlen(currentBuffer) > 0) {
+	currentBuffer = buffer;
+
+	while (strlen(currentBuffer) > 0) {
 	
 		status = sscanf(currentBuffer, " %lf %n", &number, &numBytes);
 		if (status == 1) {
-			
-			
+			status = push(&head, number);
+			if (status != EXIT_SUCCESS) {
+				free(buffer);
+				deleteAll(&head);
+				return -1;
+			}
+			currentBuffer += numBytes;
 		}
-		else {
-		
+		else{
 			sscanf(currentBuffer, " %c %n", &operation, &numBytes);
 			status = performOperation(&head, operation);
 			if (status != EXIT_SUCCESS) {
 				free(buffer);
 				deleteAll(&head);
-				return -4;
+				return -1;
 			}
+			currentBuffer += numBytes;
 		}
+	
 	}
+
+
 	free(buffer);
+
+	status = pop(destinationOfResult, &head);
+	if (status != EXIT_SUCCESS) {
+		deleteAll(&head);
+		return -1;
+	}
+
+	
+	if (head.next) {
+		printf("Postfix not valid!\n");
+		deleteAll(&head);
+		return -1;
+	}
 
 	return EXIT_SUCCESS;
 }
-
 int deleteAll(Position head) {
 
 	while (head->next != NULL) {
